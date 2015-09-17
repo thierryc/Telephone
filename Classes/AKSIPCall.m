@@ -291,6 +291,7 @@ NSString * const AKSIPCallTransferStatusDidChangeNotification = @"AKSIPCallTrans
     status = pjsua_call_dial_dtmf([self identifier], &pjDigits);
     
     if (status != PJ_SUCCESS) {  // Okay, that didn't work. Send INFO DTMF.
+        NSLog(@"RFC2833, that didn't work. Send INFO DTMF.");
         const pj_str_t kSIPINFO = pj_str("INFO");
         
         for (NSUInteger i = 0; i < [digits length]; ++i) {
@@ -301,12 +302,14 @@ NSString * const AKSIPCallTransferStatusDidChangeNotification = @"AKSIPCallTrans
             NSString *messageBody = [NSString stringWithFormat:@"Signal=%C\r\nDuration=300",
                                      [digits characterAtIndex:i]];
             messageData.msg_body = [messageBody pjString];
-            
+                        
             status = pjsua_call_send_request([self identifier], &kSIPINFO, &messageData);
             if (status != PJ_SUCCESS) {
                 NSLog(@"Error sending DTMF");
             }
         }
+    } else {
+        NSLog(@"RFC2833 work. do not try to send INFO DTMF.");
     }
 }
 

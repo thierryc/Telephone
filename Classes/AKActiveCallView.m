@@ -42,9 +42,11 @@
     NSCharacterSet *commandsCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"mh"];
     
     unichar firstCharacter = [[theEvent characters] characterAtIndex:0];
+    
     if ([DTMFCharacterSet characterIsMember:firstCharacter]) {
         if (![theEvent isARepeat]) {
             // We want to get DTMF string as text.
+            // NSLog(@"Dial digit tone array %@", [NSArray arrayWithObject:theEvent]);
             [self interpretKeyEvents:[NSArray arrayWithObject:theEvent]];
         }
     } else if ([commandsCharacterSet characterIsMember:firstCharacter]) {
